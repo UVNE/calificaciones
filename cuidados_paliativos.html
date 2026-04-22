@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuidados Paliativos - Calificaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #22c55e;
+            --success-bg: #dcfce7;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .header::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            margin: 1.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result-card {
+            display: none;
+            background: var(--bg-color);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .student-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .grade-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        /* Status Colors */
+        .status-aprobado .grade-circle { background: var(--success); }
+        .status-aprobado .status-badge { background: var(--success-bg); color: var(--success); }
+        
+        .status-reprobado .grade-circle { background: var(--danger); }
+        .status-reprobado .status-badge { background: var(--danger-bg); color: var(--danger); }
+        
+        .status-pendiente .grade-circle { 
+            background: var(--warning); 
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .status-pendiente .status-badge { background: var(--warning-bg); color: var(--warning); }
+
+        .error-message {
+            display: none;
+            color: var(--danger);
+            text-align: center;
+            padding: 1rem;
+            background: var(--danger-bg);
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .new-search {
+            display: none;
+            margin-top: 1.5rem;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .new-search:hover {
+            background: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cuidados Paliativos</h1>
+            <p>Maestría en Tanatología</p>
+        </div>
+
+        <div class="search-box" id="searchBox">
+            <div class="input-group">
+                <input type="text" id="matriculaInput" placeholder="Ingresa tu matrícula" autocomplete="off">
+            </div>
+            <button onclick="buscarCalificacion()">Consultar Calificación</button>
+            <div id="errorMessage" class="error-message">
+                Matrícula no encontrada. Por favor, verifica el número.
+            </div>
+        </div>
+
+        <div id="resultCard" class="result-card">
+            <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem;">Alumno</div>
+            <div id="studentName" class="student-name"></div>
+            
+            <div style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">Calificación Final</div>
+            <div id="gradeCircle" class="grade-circle"></div>
+            <div id="statusBadge" class="status-badge"></div>
+            
+            <button class="new-search" id="newSearchBtn" onclick="nuevaConsulta()">Nueva consulta</button>
+        </div>
+
+        <a href="index.html" class="back-link">← Volver al menú principal</a>
+
+        <div class="footer-text">
+            Maestría en Tanatología<br>
+            Ciclo Enero - Abril 2026
+        </div>
+    </div>
+
+    <script>
+        const baseDatos = [{"matricula": "10707", "nombre": "LAURA ELENA HERRERA PEREZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "1294", "nombre": "NATALIA GUADALUPE PLATA MORALES", "calificacion": "Sin calificación", "estatus": "PENDIENTE"}, {"matricula": "14888", "nombre": "PATRICIO RAFAEL AGUIRRE ALANIS", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "15362", "nombre": "ENRIQUE ALONSO GONZALEZ GONZALEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "15449", "nombre": "GEOVANA LIZETH CASTILLEJA MENDEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "16547", "nombre": "AYLIN ARACELI TORRES HERNANDEZ", "calificacion": "8", "estatus": "APROBADO"}, {"matricula": "19568", "nombre": "ANGEL GABRIEL NICOLAS DE LA CRUZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "19767", "nombre": "DENIZ MADELIN BERNAL MARTINEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "20275", "nombre": "OMAR AZAEL DIAZ VALDEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "20972", "nombre": "NALLELY CAROLINA CUADROS JACOBO", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "21281", "nombre": "SANDILY CAROLINA NIÑO MUÑIZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "22285", "nombre": "CARLOS ALBERTO HERNANDEZ HERNANDEZ", "calificacion": "Sin calificación", "estatus": "PENDIENTE"}, {"matricula": "22304", "nombre": "DULCE LIZETH HERNANDEZ RAMIREZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "22815", "nombre": "JUDITH MARTINEZ CASTELLANOS", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "23163", "nombre": "ERIKA LOERA REYNA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "23405", "nombre": "VIVIANA ALCAZAR MARTINEZ", "calificacion": "8", "estatus": "APROBADO"}, {"matricula": "24318", "nombre": "PERLA SONIA HERNANDEZ HERRERA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "24768", "nombre": "MARIA GUADALUPE PALACIOS VALENCIANO", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "24892", "nombre": "PATRICIA PEREZ VIDALES", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "25196", "nombre": "LIZETH ANAHI CORONADO RAMIREZ", "calificacion": "8", "estatus": "APROBADO"}, {"matricula": "25313", "nombre": "ARELI LIZETH KURI BUSTAMANTE", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "25444", "nombre": "JUAN JAVIER RODRIGUEZ RODRIGUEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "25461", "nombre": "EDUARDO DANIEL ZAMORA SEGURA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "25473", "nombre": "IVONE NATALI GARCIA ESPINOZA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "26441", "nombre": "ANGEL RAMIRO MONTELONGO GOMEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "26451", "nombre": "JIMENA ALEJANDRA AGUILAR MARTINEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "26652", "nombre": "SAMUEL ALESSANDRO LOPEZ IZQUIERDO", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "26739", "nombre": "VANESA CRUZ MARTINEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "26893", "nombre": "LORENZO ANTONIO ARAIZA JUAREZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27106", "nombre": "ELIAN MEDELLIN SANDOVAL", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27312", "nombre": "JUANA MARIA CASTILLO LOPEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27385", "nombre": "FRIDA GARCIA BERNAL", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27398", "nombre": "MARIANA BEATRIZ ALVAREZ PEREZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27415", "nombre": "FLOR ESTHELA MACIAS RODRIGUEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27426", "nombre": "MONICA MERARI ESCAMILLA MARTINEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27429", "nombre": "JANETH SARAHI VAZQUEZ DELGADO", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27446", "nombre": "YAHIR ORTEGA GONZALEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27470", "nombre": "VALERIA LOPEZ HERNANDEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27485", "nombre": "JAAZIEL ANDRES HERNANDEZ MENDEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27504", "nombre": "VIANNEY YOUSSETTE LEÓN VELAZQUEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27536", "nombre": "PAMELA SARAHI MUÑOZ ARIZPE", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27556", "nombre": "ALEXA MAYTE SANCHEZ RUEDA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27595", "nombre": "ANA LAURA PEREZ DE LEON", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27648", "nombre": "MYRIAM AZUCENA GARCIA URBINA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27649", "nombre": "ADOLFO ALEJANDRO VILLARREAL ESPINOZA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27701", "nombre": "OSCAR DANIEL ORTIZ HERNANDEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27703", "nombre": "LYDIA SARAHI ALVA RODRIGUEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27710", "nombre": "VALERIA KARINA CORONADO ORTEGA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27752", "nombre": "CHRISTOFER DANIEL GAMEZ VILLANUEVA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "27827", "nombre": "KEY LEAL MARTINEZ", "calificacion": "8", "estatus": "APROBADO"}, {"matricula": "29740", "nombre": "HILDA CAROLINA ESCAMILLA MONTOYA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "31904", "nombre": "ESTEFANIA ARISBHET RAMIREZ SANCHEZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "31982", "nombre": "GISELA SARAI SORIA LARA", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "35319", "nombre": "PERLA AIDE GOMEZ RAMIREZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "35461", "nombre": "LUCIA MANCILLAS DIAZ", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "35578", "nombre": "ALVARO GARCIA TOSCANO", "calificacion": "10", "estatus": "APROBADO"}, {"matricula": "35753", "nombre": "IZZA NACHIHELI ORDOÑEZ ALDRETE", "calificacion": "10", "estatus": "APROBADO"}];
+
+        function buscarCalificacion() {
+            const input = document.getElementById('matriculaInput').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const searchBox = document.getElementById('searchBox');
+            const resultCard = document.getElementById('resultCard');
+            
+            if (!input) {
+                errorMessage.textContent = 'Por favor ingresa una matrícula';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Normalizar el input (quitar .0 si el usuario lo pone por error)
+            let matriculaBuscada = input;
+            if (matriculaBuscada.endsWith('.0')) {
+                matriculaBuscada = matriculaBuscada.slice(0, -2);
+            }
+
+            const alumno = baseDatos.find(a => a.matricula === matriculaBuscada);
+
+            if (alumno) {
+                // Ocultar búsqueda y error
+                searchBox.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // Mostrar resultados
+                document.getElementById('studentName').textContent = alumno.nombre;
+                document.getElementById('gradeCircle').textContent = alumno.calificacion;
+                document.getElementById('statusBadge').textContent = alumno.estatus;
+                
+                // Aplicar clases de estado
+                resultCard.className = 'result-card'; // Reset classes
+                if (alumno.estatus === 'APROBADO') {
+                    resultCard.classList.add('status-aprobado');
+                } else if (alumno.estatus === 'REPROBADO') {
+                    resultCard.classList.add('status-reprobado');
+                } else {
+                    resultCard.classList.add('status-pendiente');
+                }
+                
+                resultCard.style.display = 'block';
+                document.getElementById('newSearchBtn').style.display = 'block';
+            } else {
+                errorMessage.textContent = 'Matrícula no encontrada. Por favor, verifica el número.';
+                errorMessage.style.display = 'block';
+                resultCard.style.display = 'none';
+            }
+        }
+
+        function nuevaConsulta() {
+            document.getElementById('matriculaInput').value = '';
+            document.getElementById('searchBox').style.display = 'block';
+            document.getElementById('resultCard').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('matriculaInput').focus();
+        }
+
+        // Permitir búsqueda con Enter
+        document.getElementById('matriculaInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                buscarCalificacion();
+            }
+        });
+    </script>
+</body>
+</html>
